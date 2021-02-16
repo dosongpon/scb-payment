@@ -30,7 +30,7 @@ class Authorization():
     def _get_headers(self):
         headers = {}
         headers['Content-Type'] = 'application/json'
-        headers['resourceOwnerId'] = str(uuid.uuid4())
+        headers['resourceOwnerId'] = self.api_key
         headers['requestUId'] = str(uuid.uuid4())
         headers['accept-language'] = 'EN'
 
@@ -48,7 +48,7 @@ class Authorization():
         payload = json.dumps(payload)
 
         response = basic_request('POST', url, headers=self._get_headers(), payload=payload)
-
+        
         if response['status']['code'] != BusinessCode.SUCCESS:
             raise SCBPaymentError("{0} {1}".format(response['status']['code'], response['status']['description']))
 
