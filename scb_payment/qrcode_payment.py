@@ -7,13 +7,20 @@ from .authorization import Authorization
 from .decorators import check_in_kwargs
 from .qr_type import QRType
 from .request import basic_request
-
+import datetime
 
 class QRCodePayment(Authorization):
 
     @check_in_kwargs(["amount", "ref1", "ref2", "ref3"])
-    def gererate_qr_30(self, amount=None, ref1=None, ref2=None, ref3=None):
+    def gererate_qr_30(self, amount=None, ref1=None, ref2=None, ref3=None,num_pay=1,exp_date=None):
         url = self._get_path("PAYMENT_QRCODE_PATH")
+
+        if not exp_date:
+            print('set exptime', datetime.datetime.now())
+            exp_date = datetime.datetime.now() + datetime.timedelta(minutes=10)
+            exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
+            print('add 10mins',exp_date,exp_date_str)
+
 
         payload = {}
         payload["qrType"] = QRType.QR_30
@@ -23,9 +30,13 @@ class QRCodePayment(Authorization):
         payload["ref1"] = ref1
         payload["ref2"] = ref2
         payload["ref3"] = ref3
+        payload["expiryDate"] = exp_date_str
+
+        payload["numberOfTimes"] = num_pay
         payload = json.dumps(payload)
 
         response = basic_request('POST', url, headers=self._get_headers(), payload=payload)
+        print('gererate_qr_30 respons', response)
 
         return response
 
