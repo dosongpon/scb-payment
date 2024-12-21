@@ -17,9 +17,9 @@ class QRCodePayment(Authorization):
 
         if not exp_date:
             print('set exptime', datetime.datetime.now())
-            exp_date = datetime.datetime.now() + datetime.timedelta(minutes=10)
+            exp_date = datetime.datetime.now() + datetime.timedelta(minutes=5)
             exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
-            print('add 10mins',exp_date,exp_date_str)
+            print('add 5mins',exp_date,exp_date_str)
 
 
         payload = {}
